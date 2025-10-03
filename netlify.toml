@@ -1,14 +1,9 @@
 [build]
-  command = "npm run build:netlify"
-  publish = ".next"
+command = "npm run build:netlify"
+publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "18"
-  NPM_FLAGS = "--production=false"
+NODE_VERSION = "18"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-[functions]
-  # Increase timeout for functions that might need more time
-  timeout = 60
+package = "@netlify/plugin-nextjs"
