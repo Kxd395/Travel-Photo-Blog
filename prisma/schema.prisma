@@ -1,0 +1,196 @@
+// Prisma schema for Travel Photo Blog
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============= Auth Models =============
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("user") // user | admin | editor
+  accounts      Account[]
+  sessions      Session[]
+  reviews       Review[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============= Content Models =============
+
+model Place {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  address        String?
+  neighborhood   String?
+  city           String?
+  country        String?
+  lat            Float?
+  lng            Float?
+  categories     String[] // Array of category strings
+  coverPhotoId   String?
+  coverPhoto     Photo?    @relation("PlaceCoverPhoto", fields: [coverPhotoId], references: [id])
+  description    String?   @db.Text
+  averageRating  Float?
+  reviews        Review[]
+  photos         Photo[]   @relation("PlacePhotos")
+  tripPlaces     TripPlace[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  published      Boolean   @default(true)
+
+  @@index([slug])
+  @@index([published])
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  placeId     String
+  place       Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
+  title       String
+  rating      Float     @default(0) // 0-5 stars
+  dateVisited DateTime
+  cost        String?
+  tags        String[] // Array of tag strings
+  pros        String[]
+  cons        String[]
+  tips        String[]
+  body        String?   @db.Text
+  photoIds    String[]
+  photos      Photo[]   @relation("ReviewPhotos")
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([placeId])
+  @@index([published])
+}
+
+model Photo {
+  id            String    @id @default(cuid())
+  src           String    // Path or URL to photo
+  alt           String?
+  width         Int?
+  height        Int?
+  blurDataUrl   String?   @db.Text
+  takenAt       DateTime?
+  uploadedAt    DateTime  @default(now())
+  placeId       String?
+  place         Place?    @relation("PlacePhotos", fields: [placeId], references: [id])
+  tags          String[]
+  exifData      Json?     // Store raw EXIF data
+  position      Int       @default(0) // For ordering
+  reviewIds     String[]
+  reviews       Review[]  @relation("ReviewPhotos")
+  placeCover    Place[]   @relation("PlaceCoverPhoto")
+  tripCover     Trip[]    @relation("TripCoverPhoto")
+  tripPhotos    TripPhoto[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([placeId])
+  @@index([position])
+}
+
+model Trip {
+  id           String      @id @default(cuid())
+  slug         String      @unique
+  title        String
+  startDate    DateTime
+  endDate      DateTime
+  coverPhotoId String?
+  coverPhoto   Photo?      @relation("TripCoverPhoto", fields: [coverPhotoId], references: [id])
+  summary      String?     @db.Text
+  places       TripPlace[]
+  photos       TripPhoto[]
+  published    Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([slug])
+  @@index([published])
+  @@index([startDate])
+}
+
+// Junction tables for many-to-many with ordering
+
+model TripPlace {
+  id       String @id @default(cuid())
+  tripId   String
+  trip     Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  placeId  String
+  place    Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  position Int    @default(0)
+
+  @@unique([tripId, placeId])
+  @@index([tripId])
+  @@index([placeId])
+  @@index([position])
+}
+
+model TripPhoto {
+  id       String @id @default(cuid())
+  tripId   String
+  trip     Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  photoId  String
+  photo    Photo  @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  position Int    @default(0)
+
+  @@unique([tripId, photoId])
+  @@index([tripId])
+  @@index([photoId])
+  @@index([position])
+}

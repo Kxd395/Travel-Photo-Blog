@@ -1,0 +1,56 @@
+[
+  {
+    "id": "rv1",
+    "slug": "museo-de-cera-family-stop",
+    "placeId": "wax-museum",
+    "title": "Fun quick stop near the hotel",
+    "rating": 4,
+    "dateVisited": "2025-10-29",
+    "tags": [
+      "museum",
+      "kid-friendly"
+    ],
+    "pros": [
+      "Easy walk from Reforma",
+      "Affordable",
+      "Great photo ops"
+    ],
+    "cons": [
+      "Crowded midday"
+    ],
+    "tips": [
+      "Go before 11am",
+      "Buy tickets online"
+    ],
+    "body": "A playful hour with lots of photo moments. Good first\u2011day, low\u2011energy stop after arrival.",
+    "photos": [
+      "ph1",
+      "ph3"
+    ]
+  },
+  {
+    "id": "rv2",
+    "slug": "quirky-ripleys-next-door",
+    "placeId": "ripleys",
+    "title": "Quirky and fun if you have time",
+    "rating": 3.5,
+    "dateVisited": "2025-10-29",
+    "tags": [
+      "oddities",
+      "museum"
+    ],
+    "pros": [
+      "Right next to Wax Museum"
+    ],
+    "cons": [
+      "Cheesy exhibits"
+    ],
+    "tips": [
+      "Pair with Wax Museum to save a trip"
+    ],
+    "body": "Not essential, but we laughed a bunch. Great for a rainy hour.",
+    "photos": [
+      "ph2"
+    ]
+  }
+]

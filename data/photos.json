@@ -1,0 +1,35 @@
+[
+  {
+    "id": "ph1",
+    "src": "/photos/wax1.svg",
+    "alt": "Wax Museum exterior, Ju\u00e1rez",
+    "placeId": "wax-museum",
+    "takenAt": "2025-10-29",
+    "tags": [
+      "museum",
+      "juarez"
+    ]
+  },
+  {
+    "id": "ph2",
+    "src": "/photos/ripley1.svg",
+    "alt": "Ripley\u2019s Believe It or Not! sign",
+    "placeId": "ripleys",
+    "takenAt": "2025-10-29",
+    "tags": [
+      "oddities",
+      "juarez"
+    ]
+  },
+  {
+    "id": "ph3",
+    "src": "/photos/wax2.svg",
+    "alt": "Exhibit selfie moment",
+    "placeId": "wax-museum",
+    "takenAt": "2025-10-29",
+    "tags": [
+      "museum",
+      "selfie"
+    ]
+  }
+]

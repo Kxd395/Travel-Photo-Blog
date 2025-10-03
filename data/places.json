@@ -1,0 +1,46 @@
+[
+  {
+    "id": "wax-museum",
+    "slug": "museo-de-cera",
+    "name": "Museo de Cera (Wax Museum)",
+    "address": "Londres 6, Ju\u00e1rez, Cuauht\u00e9moc, CDMX",
+    "neighborhood": "Ju\u00e1rez",
+    "city": "Mexico City",
+    "country": "Mexico",
+    "coords": {
+      "lat": 19.42694,
+      "lng": -99.15984
+    },
+    "categories": [
+      "Museum",
+      "Family"
+    ],
+    "coverPhotoId": "ph1",
+    "averageRating": 4.0,
+    "reviewIds": [
+      "rv1"
+    ]
+  },
+  {
+    "id": "ripleys",
+    "slug": "ripleys-believe-it-or-not",
+    "name": "Ripley\u2019s Believe It or Not!",
+    "address": "Londres 4, Ju\u00e1rez, Cuauht\u00e9moc, CDMX",
+    "neighborhood": "Ju\u00e1rez",
+    "city": "Mexico City",
+    "country": "Mexico",
+    "coords": {
+      "lat": 19.42639,
+      "lng": -99.1596
+    },
+    "categories": [
+      "Attraction",
+      "Quirky"
+    ],
+    "coverPhotoId": "ph2",
+    "averageRating": 3.5,
+    "reviewIds": [
+      "rv2"
+    ]
+  }
+]

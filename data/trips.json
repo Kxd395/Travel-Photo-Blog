@@ -1,0 +1,19 @@
+[
+  {
+    "id": "trip-cdmx-2025",
+    "slug": "mexico-city-2025",
+    "title": "Mexico City (Oct 28 \u2013 Nov 9, 2025)",
+    "startDate": "2025-10-28",
+    "endDate": "2025-11-09",
+    "summary": "Parent\u2011teen D\u00eda de Muertos adventure. Base in Ju\u00e1rez near Reforma.",
+    "placeIds": [
+      "wax-museum",
+      "ripleys"
+    ],
+    "photoIds": [
+      "ph1",
+      "ph2",
+      "ph3"
+    ]
+  }
+]
