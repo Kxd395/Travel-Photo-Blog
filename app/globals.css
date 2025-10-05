@@ -2,32 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ensure consistent styling across environments */
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
 :root {
   --bg: 255 255 255;
   --fg: 17 24 39;
-  color-scheme: light dark;
 }
-
 html.dark {
   --bg: 17 24 39;
   --fg: 229 231 235;
 }
-
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--fg));
   transition: background-color 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
-  line-height: 1.5;
 }
 
 /* Utility classes */

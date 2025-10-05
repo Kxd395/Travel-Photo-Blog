@@ -1,22 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+
+// Action function (will be easy to convert to server action in React 19)
+async function subscribeToNewsletter(email: string) {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  // Validation
+  if (!email || !/^[\w.!#$%&'*+/=?`{|}~-]+@[\w-]+\.[\w.-]+$/i.test(email)) {
+    return { 
+      success: false, 
+      message: 'Pop in a valid email and we\'ll keep you in the loop.' 
+    }
+  }
+  
+  // TODO: Replace with actual API call when backend is ready
+  // const response = await fetch('/api/newsletter', { method: 'POST', body: JSON.stringify({ email }) })
+  
+  return { 
+    success: true, 
+    message: 'Thanks! We\'ll send our next travel drop soon.' 
+  }
+}
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [isPending, startTransition] = useTransition()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!email || !/^[\w.!#$%&'*+/=?`{|}~-]+@[\w-]+\.[\w.-]+$/i.test(email)) {
-      setStatus('error')
-      setMessage('Pop in a valid email and we\'ll keep you in the loop.')
-      return
-    }
-    setStatus('success')
-    setMessage('Thanks! We\'ll send our next travel drop soon.')
-    setEmail('')
+    
+    startTransition(async () => {
+      const result = await subscribeToNewsletter(email)
+      
+      if (result.success) {
+        setStatus('success')
+        setMessage(result.message)
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMessage(result.message)
+      }
+    })
   }
 
   return (
@@ -42,9 +70,14 @@ export default function NewsletterForm() {
             }}
             className="flex-1"
             aria-describedby="newsletter-helper"
+            disabled={isPending}
           />
-          <button type="submit" className="btn btn-primary sm:w-auto">
-            Join list
+          <button 
+            type="submit" 
+            className="btn btn-primary sm:w-auto" 
+            disabled={isPending}
+          >
+            {isPending ? 'Subscribing...' : 'Join list'}
           </button>
         </div>
         <p id="newsletter-helper" className="mt-2 text-xs text-gray-500 dark:text-gray-400">

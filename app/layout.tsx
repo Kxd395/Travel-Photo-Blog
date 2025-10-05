@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Resource hints for better performance */}
+        <link rel="preconnect" href="https://uploadthing.com" />
+        <link rel="preconnect" href="https://utfs.io" />
+        <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
+        <link rel="dns-prefetch" href="https://unpkg.com" />
+      </head>
       <body className="min-h-screen flex flex-col">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-accent-500 focus:text-white focus:px-4 focus:py-2 focus:rounded">
           Skip to main content
