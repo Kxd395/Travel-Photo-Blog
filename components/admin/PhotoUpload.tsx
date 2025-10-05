@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { useUploadThing } from "@/lib/uploadthing"
 import { Upload, X, Loader2 } from "lucide-react"
 
@@ -12,6 +12,7 @@ export function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [isPending, startTransition] = useTransition()
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: (res) => {
@@ -33,7 +34,9 @@ export function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files))
+      startTransition(() => {
+        setFiles(Array.from(e.target.files!))
+      })
     }
   }
 
@@ -44,7 +47,9 @@ export function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
   }
 
   const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index))
+    startTransition(() => {
+      setFiles((prev) => prev.filter((_, i) => i !== index))
+    })
   }
 
   return (
@@ -58,12 +63,12 @@ export function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
           multiple
           onChange={handleFileChange}
           className="sr-only"
-          disabled={uploading}
+          disabled={uploading || isPending}
         />
         <label
           htmlFor="photo-upload"
           className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-            uploading
+            uploading || isPending
               ? "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 cursor-not-allowed"
               : "border-gray-300 dark:border-gray-600 hover:border-accent-500 dark:hover:border-accent-400 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
           }`}

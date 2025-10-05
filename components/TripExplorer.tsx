@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Trip, Place, Photo } from '@/lib/types'
@@ -24,6 +24,7 @@ export default function TripExplorer({ trips }: Props) {
   const [selectedCountry, setSelectedCountry] = useState<string>('all')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [sort, setSort] = useState<'newest' | 'oldest'>('newest')
+  const [isPending, startTransition] = useTransition()
 
   const yearOptions = useMemo(() => {
     const years = new Set<string>()
@@ -79,11 +80,13 @@ export default function TripExplorer({ trips }: Props) {
   }, [filteredTrips, sort])
 
   const resetFilters = () => {
-    setSearch('')
-    setSelectedYear('all')
-    setSelectedCountry('all')
-    setSelectedCategory('all')
-    setSort('newest')
+    startTransition(() => {
+      setSearch('')
+      setSelectedYear('all')
+      setSelectedCountry('all')
+      setSelectedCategory('all')
+      setSort('newest')
+    })
   }
 
   const hasFilters = search.trim().length > 0
@@ -102,7 +105,7 @@ export default function TripExplorer({ trips }: Props) {
               id="trip-search"
               placeholder="Search by title or highlight"
               value={search}
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => startTransition(() => setSearch(event.target.value))}
               className="w-full"
             />
           </div>
@@ -110,7 +113,7 @@ export default function TripExplorer({ trips }: Props) {
             <label className="block mb-2">Year</label>
             <select
               value={selectedYear}
-              onChange={event => setSelectedYear(event.target.value)}
+              onChange={event => startTransition(() => setSelectedYear(event.target.value))}
               className="w-32"
             >
               <option value="all">Any year</option>
@@ -123,7 +126,7 @@ export default function TripExplorer({ trips }: Props) {
             <label className="block mb-2">Country</label>
             <select
               value={selectedCountry}
-              onChange={event => setSelectedCountry(event.target.value)}
+              onChange={event => startTransition(() => setSelectedCountry(event.target.value))}
               className="w-36"
             >
               <option value="all">Anywhere</option>
@@ -136,7 +139,7 @@ export default function TripExplorer({ trips }: Props) {
             <label className="block mb-2">Sort</label>
             <select
               value={sort}
-              onChange={event => setSort(event.target.value as 'newest' | 'oldest')}
+              onChange={event => startTransition(() => setSort(event.target.value as 'newest' | 'oldest'))}
               className="w-36"
             >
               <option value="newest">Newest first</option>
@@ -149,7 +152,7 @@ export default function TripExplorer({ trips }: Props) {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setSelectedCategory('all')}
+              onClick={() => startTransition(() => setSelectedCategory('all'))}
               className={`chip ${selectedCategory === 'all' ? 'chip-active' : ''}`}
             >
               All moods
@@ -158,7 +161,7 @@ export default function TripExplorer({ trips }: Props) {
               <button
                 key={category}
                 type="button"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => startTransition(() => setSelectedCategory(category))}
                 className={`chip capitalize ${selectedCategory === category ? 'chip-active' : ''}`}
               >
                 {category}
@@ -180,10 +183,14 @@ export default function TripExplorer({ trips }: Props) {
 
       {sortedTrips.length === 0 ? (
         <div className="card card-dark p-12 text-center text-gray-500 dark:text-gray-400">
-          No trips match those filters yet. Adjust the filters to rediscover an itinerary.
+          {isPending ? (
+            <p>Loading trips...</p>
+          ) : (
+            <p>No trips match those filters yet. Adjust the filters to rediscover an itinerary.</p>
+          )}
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className={`grid gap-6 md:grid-cols-2 xl:grid-cols-3 transition-opacity ${isPending ? 'opacity-50' : 'opacity-100'}`}>
           {sortedTrips.map(trip => (
             <TripCard key={trip.id} trip={trip} />
           ))}
